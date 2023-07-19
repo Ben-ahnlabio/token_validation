@@ -1,5 +1,5 @@
 from web3 import Web3
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Literal, Optional, Union, TypedDict
 import pydantic
 
 
@@ -85,6 +85,22 @@ def main():
     print(result)
     print(result2)
     print(result3)
+
+TokenValidateResult = TypedDict('TokenValidateResult', {
+    "contract_type": Literal["ERC-20", "ERC-721", "ERC-1155"],
+    "eip_standard": bool,
+    "missing_data": Optional[List[str]]
+})
+
+
+class Settings(pydantic.BaseSettings):
+    mainnet_url: str = pydantic.Field(default="local", env="mainnet_url")
+
+def token_validate(settings: Settings) -> TokenValidateResult:
+    settings.mainnet_url
+    web3_provider = Web3Provider(settings.mainnet_url)
+    bytecode_checker = BytecodeChecker(web3_provider)
+    return {}
 
 
 if __name__ == "__main__":
